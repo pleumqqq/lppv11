@@ -1,0 +1,132 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Fully Hub", "GrapeTheme")
+
+local Tab = Window:NewTab("Menu")
+local Section = Tab:NewSection("วิ่งไว")
+ 
+ Section:NewToggle("เปิดปิด วิ่งไว","Fully Hub"  ,function(state)
+    if state then
+        print("Toggle On")
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
+    else
+        print("Toggle Off")
+        game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 20
+    end
+end)
+
+Section:NewSlider("ปรับความไวในการวิ่ง", "Fully Hub", 500, 0, function(s) -- 500 (MaxValue) | 0 (MinValue)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = s
+end)
+
+local Tab = Window:NewTab("Players")
+local Section = Tab:NewSection("ฟังชั่นมองผู้เล่น ESP ")
+
+Section:NewButton("ESP", "ESP", function()
+    loadstring(game:HttpGet("https://cdn.wearedevs.net/scripts/WRD%20ESP.txt"))()
+end)
+
+local Tab = Window:NewTab("Aimbot")
+local Section = Tab:NewSection("Aimbot")
+
+Section:NewButton("aimlock", "กดคลิกขวาเพื่อล็อก", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Exunys/Aimbot-V3/main/src/Aimbot.lua"))()()
+end)
+
+local Setting = Window:NewTab("Setting")
+local SettingSection = Setting:NewSection("Setting")
+
+SettingSection:NewKeybind("เปิดปิดหน้า UI", "เปิดปิดหน้า UI", Enum.KeyCode.Quote, function()
+    Library:ToggleUI()
+end)
+
+SettingSection:NewButton("กดเพื่อก็อปปี้ลิ้งค์ดิส", "กดเพื่อก็อปปี้ลิ้งค์ดิส", function()
+    setclipboard("https://discord.gg/3uZXAGx4")
+end)
+
+local Tab = Window:NewTab("รวมสคิป")
+local Section = Tab:NewSection("รวมสคิป")
+
+Section:NewButton("block spin [จักยาน]", "Fully Hub", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/xQuartyx/QuartyzScript/refs/heads/main/Block%20Spin/Default.lua"))()
+end)
+
+Section:NewButton("แมพรางตาย", "Fully Hub", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/ArdyBotzz/NatHub/refs/heads/master/NatHub.lua"))()
+end)
+
+Section:NewButton("อาเซนอล", "Fully Hub", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/thaibao/main/TbaoHubArsenal"))()
+end)
+
+local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local ToggleGui = Instance.new("ScreenGui")
+ToggleGui.Name = "ToggleGui"
+ToggleGui.Parent = PlayerGui
+
+local PlayerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local ToggleGui = Instance.new("ScreenGui")
+ToggleGui.Name = "ToggleGui"
+ToggleGui.Parent = PlayerGui
+
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0, 80, 0, 40)
+ToggleButton.Position = UDim2.new(1, -100, 0, 20)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+ToggleButton.TextColor3 = Color3.new(1, 1, 1)
+ToggleButton.Text = "เปิด/ปิด UI"
+ToggleButton.Parent = ToggleGui
+ToggleButton.AutoButtonColor = true
+ToggleButton.Font = Enum.Font.SourceSansBold
+ToggleButton.TextSize = 18
+
+-- เพิ่มรูปภาพลงในปุ่ม
+local icon = Instance.new("ImageLabel")
+icon.Size = UDim2.new(0, 24, 0, 24)
+icon.Position = UDim2.new(0, 5, 0.5, -12)
+icon.BackgroundTransparency = 1
+icon.Image = "rbxassetid://1234567890" -- 6238
+icon.Parent = ToggleButton
+
+-- ฟังก์ชันลากปุ่ม
+local UserInputService = game:GetService("UserInputService")
+local dragging = false
+local dragInput
+local dragStart
+local startPos
+
+ToggleButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = ToggleButton.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+ToggleButton.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        ToggleButton.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+end)
+
+-- กดปุ่มเพื่อเปิด/ปิด UI ของ Kavo Library
+ToggleButton.MouseButton1Click:Connect(function()
+    Library:ToggleUI()
+end)
